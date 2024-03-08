@@ -1,25 +1,28 @@
 import { useEffect, useState } from 'react';
+import { useHttp } from '../hooks/useHttp';
 import { MealItem } from './MealItem';
+import { Error } from './Error';
+
+const requestConfig = {};
 
 export const Meals = () => {
-	const [loadedMeals, setLoadedMeals] = useState([]);
+	const {
+		data: loadedMeals,
+		error,
+		isLoading,
+	} = useHttp('http://localhost:3000/meals', requestConfig, []);
 
-	useEffect(() => {
-		async function fetchMeals() {
-			const response = await fetch('http://localhost:3000/meals');
-
-			const meals = await response.json();
-			setLoadedMeals(meals);
-		}
-
-		fetchMeals();
-	}, []);
+	// console.log(error); нет стилей у ерора
 
 	return (
-		<ul id="meals">
-			{loadedMeals.map(meal => (
-				<MealItem meal={meal} key={meal.id}/>
-			))}
-		</ul>
+		<>
+			{isLoading && <p className="center">Please, wait...</p>}
+			{error && <Error title="Failed with error" message={error} />}
+			<ul id="meals">
+				{loadedMeals.map(meal => (
+					<MealItem meal={meal} key={meal.id} />
+				))}
+			</ul>
+		</>
 	);
 };

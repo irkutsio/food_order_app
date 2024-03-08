@@ -178,6 +178,10 @@ h1 {
   color: #ffab04;
 }
 
+
+.center {
+  text-align: center;
+}
 .control {
   margin: 0.5rem 0;
   display: flex;
