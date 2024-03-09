@@ -14,13 +14,14 @@ const requestConfig = {
 };
 
 export const Checkout = () => {
-	const { items } = useContext(CartContext);
+	const { items, clearCart } = useContext(CartContext);
 	const { progress, hideCheckout } = useContext(UserProgressContext);
 
 	const {
 		data,
 		isLoading: isSending,
 		error,
+		 clearData,
 		sendRequest,
 	} = useHttp('http://localhost:3000/orders', requestConfig);
 
@@ -33,7 +34,9 @@ export const Checkout = () => {
 	};
 
 const handleFinish = () => {
-	
+	hideCheckout(),
+	clearCart()
+	clearData()
 }
 
 	const handleSubmit = e => {
@@ -55,7 +58,7 @@ const handleFinish = () => {
 
 	if (data && !error) {
 		return (
-			<Modal open={progress === 'checkout'} onClose={handleClose}>
+			<Modal open={progress === 'checkout'} onClose={handleFinish}>
 				<h2>Success!</h2>
 				<p>Your order was submited</p>
 				<p className="modal-actions">
